@@ -9,7 +9,7 @@ WORKDIR /root
 RUN set -eux; \
 	  apk add --no-cache tzdata ca-certificates binutils && rm -rf /var/cache/apk/* ; \
     url="${BASE_URL}/dists/${DIST_VER}/main/binary-amd64/Packages" ; \
-    content=$(wget -qO- $url) ; \
+    wget -qO- $url >content ; \
     filename=$(grep -o 'Filename: .*' content | cut -d" " -f2) ; \
     wget --no-check-certificate -c "${BASE_URL}/${filename}" -O warp.deb ; \
     ls -alh ; \
