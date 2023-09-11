@@ -5,7 +5,6 @@ ENV DIST_VER = bookworm
 ENV BASE_URL = https://pkg.cloudflareclient.com
 
 WORKDIR /root
-COPY extract_url.sh /root/extract_url.sh
 
 RUN set -eux; \
 	  apk add --no-cache tzdata ca-certificates unzip && rm -rf /var/cache/apk/* ; \
