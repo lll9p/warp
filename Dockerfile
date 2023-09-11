@@ -7,7 +7,7 @@ ENV BASE_URL "https://pkg.cloudflareclient.com"
 WORKDIR /root
 
 RUN set -eux; \
-	  apk add --no-cache tzdata ca-certificates unzip && rm -rf /var/cache/apk/* ; \
+	  apk add --no-cache tzdata ca-certificates unzip binutils && rm -rf /var/cache/apk/* ; \
     url="${BASE_URL}/dists/${DIST_VER}/main/binary-amd64/Packages" ; \
     filename=$(wget -qO- $url | grep -o 'Filename: .*' content | cut -d" " -f2) ; \
     wget --no-check-certificate -c "${BASE_URL}/${filename}" -O warp.tar.gz ; \
