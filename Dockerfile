@@ -9,7 +9,8 @@ WORKDIR /root
 RUN set -eux; \
 	  apk add --no-cache tzdata ca-certificates unzip && rm -rf /var/cache/apk/* ; \
     url="${BASE_URL}/dists/${DIST_VER}/main/binary-amd64/Packages" ; \
-    filename=$(wget -qO- $url | grep -oP 'Filename:\s+\K.+'); \
+    echo $url; \
+    filename=$(wget -qO- $url | grep -oP 'Filename:\s+\K.+') ; \
     wget --no-check-certificate -c "${BASE_URL}/${filename}" -O warp.tar.gz ; \
     ls -alh ; \
     mkdir /root/warp ; \
