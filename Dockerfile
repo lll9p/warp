@@ -1,23 +1,16 @@
-FROM alpine:latest
+FROM debian:bookworm-slim
+
 LABEL maintainer="lll9p <lll9p.china@gmail.com>"
 
-ENV DIST_VER "bookworm"
-ENV BASE_URL "https://pkg.cloudflareclient.com"
+ARG DIST_VER "bookworm"
+ARG DEBIAN_FRONTEND=noninteractive
 
 WORKDIR /root
 
 RUN set -eux; \
-	  apk add --no-cache tzdata ca-certificates binutils && rm -rf /var/cache/apk/* ; \
-    url="${BASE_URL}/dists/${DIST_VER}/main/binary-amd64/Packages" ; \
-    wget -qO- $url >content ; \
-    filename=$(grep -o 'Filename: .*' content | cut -d" " -f2) ; \
-    wget --no-check-certificate -c "${BASE_URL}/${filename}" -O warp.deb ; \
-    ls -alh ; \
-    mkdir /root/warp ; \
-    ar -x warp.deb ; \
-    ls /root/warp ;\
-    ls /root; \
-    apk del binutils
+    curl https://pkg.cloudflareclient.com/pubkey.gpg | gpg --yes --dearmor --output /usr/share/keyrings/cloudflare-warp-archive-keyring.gpg ; \
+    echo "deb [arch=amd64 signed-by=/usr/share/keyrings/cloudflare-warp-archive-keyring.gpg] https://pkg.cloudflareclient.com/ ${DIST_VER} main" | tee /etc/apt/sources.list.d/cloudflare-client.list ; \
+    apt-get update && apt-get install cloudflare-warp tzdata
 
 VOLUME /etc/xray
 ENV TZ=Asia/Shanghai
